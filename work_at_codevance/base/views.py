@@ -3,6 +3,9 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
 from django.shortcuts import render, redirect
 
+from work_at_codevance.base.models import Payment
+from work_at_codevance.base.utils import is_member
+
 
 @login_required
 def home(request):
@@ -33,4 +36,49 @@ def logout_view(request):
 
 @login_required
 def payments(request):
-    return render(request, 'payments.html')
+    operator = is_member(request.user, 'Operador')
+    provider = is_member(request.user, 'Fornecedor')
+
+    payments_available = []
+    payments_unavailable = []
+    payments_waiting_confirmation = []
+    payments_approved = []
+    payments_denied = []
+
+    if provider:
+
+        user = request.user
+        provider = user.provider_set.get()
+        payments = provider.payment_set.all()
+
+        for p in payments:
+            if p.status == 'DISPO':
+                payments_available.append(p)
+            elif p.status == 'INDIS':
+                payments_unavailable.append(p)
+            elif p.status == 'AGUAR':
+                payments_waiting_confirmation.append(p)
+            elif p.status == 'APROV':
+                payments_approved.append(p)
+            elif p.status == 'NEGAD':
+                payments_denied.append(p)
+
+    elif operator:
+
+        payments_available = Payment.objects.filter(status='DISPO')
+        payments_unavailable = Payment.objects.filter(status='INDIS')
+        payments_waiting_confirmation = Payment.objects.filter(status='AGUAR')
+        payments_approved = Payment.objects.filter(status='APROV')
+        payments_denied = Payment.objects.filter(status='NEGAD')
+
+    context = {
+        'payments_available': payments_available,
+        'payments_unavailable': payments_unavailable,
+        'payments_waiting_confirmation': payments_waiting_confirmation,
+        'payments_approved': payments_approved,
+        'payments_denied': payments_denied,
+        'operador': operator,
+        'fornecedor': provider
+    }
+
+    return render(request, 'payments.html', context=context)

@@ -20,7 +20,7 @@ from django.utils.translation import gettext_lazy as _
 from django.views.decorators.csrf import csrf_protect
 from django.views.decorators.debug import sensitive_post_parameters
 
-from work_at_codevance.base.models import User
+from work_at_codevance.base.models import User, Provider, Payment
 
 csrf_protect_m = method_decorator(csrf_protect)
 sensitive_post_parameters_m = method_decorator(sensitive_post_parameters())
@@ -213,3 +213,32 @@ class UserAdmin(admin.ModelAdmin):
             request.POST = request.POST.copy()
             request.POST["_continue"] = 1
         return super().response_add(request, obj, post_url_continue)
+
+
+class PaymentAdmin(admin.ModelAdmin):
+    list_display = (
+        'provider',
+        'date_issuance',
+        'date_due',
+        'date_anticipation',
+        'value_original',
+        'discount',
+        'value_with_discount',
+        'status',
+        'created_at',
+        'updated_at',
+    )
+
+
+class ProviderAdmin(admin.ModelAdmin):
+    list_display = (
+        'user',
+        'cnpj',
+        'corporate_name',
+        'created_at',
+        'updated_at'
+    )
+
+
+admin.site.register(Payment, PaymentAdmin)
+admin.site.register(Provider, ProviderAdmin)

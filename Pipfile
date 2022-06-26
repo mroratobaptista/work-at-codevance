@@ -9,6 +9,7 @@ gunicorn = "*"
 python-decouple = "*"
 
 [dev-packages]
+pytest-django = "*"
 
 [requires]
 python_version = "3.9"

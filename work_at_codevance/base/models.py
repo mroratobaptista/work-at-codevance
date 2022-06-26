@@ -89,3 +89,50 @@ class User(AbstractBaseUser, PermissionsMixin):
     def email_user(self, subject, message, from_email=None, **kwargs):
         """Send an email to this user."""
         send_mail(subject, message, from_email, [self.email], **kwargs)
+
+
+class Provider(models.Model):
+    cnpj = models.IntegerField('CNPJ', primary_key=True)
+    corporate_name = models.CharField('Razão Social', null=True, blank=True, max_length=100)
+
+    user = models.ForeignKey(User, on_delete=models.PROTECT)
+
+    created_at = models.DateTimeField('Criado Em', auto_now_add=True)
+    updated_at = models.DateTimeField('Atualizado Em', auto_now=True)
+
+    class Meta:
+        verbose_name = 'fornecedor'
+        verbose_name_plural = 'fornecedores'
+
+    def __str__(self):
+        return self.corporate_name
+
+
+class Payment(models.Model):
+    TYPES_STATUS = (
+        ('DISPO', 'Disponível'),
+        ('INDIS', 'Indisponível'),
+        ('AGUAR', 'Aguardando Confirmação'),
+        ('ACEIT', 'Aceito'),
+        ('NEGAD', 'Negado'),
+    )
+
+    provider = models.ForeignKey(Provider, on_delete=models.PROTECT)
+
+    date_issuance = models.DateField('Data de Emissão', null=True, blank=True)
+    date_due = models.DateField('Data de Vencimento', null=True, blank=True)
+    date_anticipation = models.DateField('Data de Antecipação', null=True, blank=True)
+    value_original = models.FloatField('Valor Original', null=True, blank=True)
+    discount = models.FloatField('Valor Desconto', null=True, blank=True)
+    value_with_discount = models.FloatField('Valor com Desconto', null=True, blank=True)
+    status = models.CharField('Situação', null=True, blank=True, max_length=50, choices=TYPES_STATUS)
+
+    created_at = models.DateTimeField('Criado Em', auto_now_add=True)
+    updated_at = models.DateTimeField('Atualizado Em', auto_now=True)
+
+    class Meta:
+        verbose_name = 'pagamento'
+        verbose_name_plural = 'pagamentos'
+
+    def __str__(self):
+        return self.provider.corporate_name

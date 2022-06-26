@@ -16,15 +16,15 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from work_at_codevance.base.views import home, login, logout, payments
+from work_at_codevance.base.views import home, login_view, logout_view, payments
 
 urlpatterns = [
     path('admin/', admin.site.urls),
 
     path('', home),
 
-    path('login/', login),
-    path('logout/', logout),
+    path('login/', login_view),
+    path('logout/', logout_view),
 
     path('pagamentos/', payments),
 ]

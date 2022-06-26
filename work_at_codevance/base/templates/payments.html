@@ -5,6 +5,202 @@
         <div class="row">
             <div class="col">
                 <h1 class="text-center">Pagamentos</h1>
+
+                {% if payments_available %}
+
+                    <h2>Disponíveis</h2>
+
+                    <table class="table table-hover">
+                        <thead>
+                        <tr>
+                            <th scope="col">ID</th>
+                            <th scope="col">Fornecedor</th>
+                            <th scope="col">Data de Emissão</th>
+                            <th scope="col">Data de Vencimento</th>
+                            <th scope="col">Valor Original</th>
+                            <th scope="col">Situação</th>
+                            <th scope="col">Solicitar Adiantamento</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for p in payments_available %}
+                            <tr>
+                                <th scope="row">{{ p.id }}</th>
+                                <td>{{ p.provider.corporate_name }}</td>
+                                <td>{{ p.date_issuance }}</td>
+                                <td>{{ p.date_due }}</td>
+                                <td>{{ p.value_original }}</td>
+                                <td>{{ p.get_status_display }}</td>
+                                <td>
+                                    <a href="/pagamentos/{{ p.id }}">
+                                        <button type="button" class="btn btn-success">Adiantar</button>
+                                    </a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+
+                {% endif %}
+
+                {% if payments_unavailable %}
+
+                    <h2>Indisponíveis</h2>
+
+                    <table class="table table-hover">
+                        <thead>
+                        <tr>
+                            <th scope="col">ID</th>
+                            <th scope="col">Fornecedor</th>
+                            <th scope="col">Data de Emissão</th>
+                            <th scope="col">Data de Vencimento</th>
+                            <th scope="col">Valor Original</th>
+                            <th scope="col">Situação</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for p in payments_unavailable %}
+                            <tr>
+                                <th scope="row">{{ p.id }}</th>
+                                <td>{{ p.provider.corporate_name }}</td>
+                                <td>{{ p.date_issuance }}</td>
+                                <td>{{ p.date_due }}</td>
+                                <td>{{ p.value_original }}</td>
+                                <td>{{ p.get_status_display }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+
+                {% endif %}
+
+                {% if payments_waiting_confirmation %}
+
+                    <h2>Aguardando Confirmação</h2>
+
+                    <table class="table table-hover">
+                        <thead>
+                        <tr>
+                            <th scope="col">ID</th>
+                            <th scope="col">Fornecedor</th>
+                            <th scope="col">Data de Emissão</th>
+                            <th scope="col">Data de Vencimento</th>
+                            <th scope="col">Valor Original</th>
+                            <th scope="col">Data Antecipação</th>
+                            <th scope="col">Desconto</th>
+                            <th scope="col">Valor com Desconto</th>
+                            <th scope="col">Situação</th>
+                            {% if operador %}
+                                <th scope="col">Liberar</th>
+                                <th scope="col">Negar</th>
+                            {% endif %}
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for p in payments_waiting_confirmation %}
+                            <tr>
+                                <th scope="row">{{ p.id }}</th>
+                                <td>{{ p.provider.corporate_name }}</td>
+                                <td>{{ p.date_issuance }}</td>
+                                <td>{{ p.date_due }}</td>
+                                <td>{{ p.value_original }}</td>
+                                <td>{{ p.date_anticipation }}</td>
+                                <td>{{ p.discount }}</td>
+                                <td>{{ p.value_with_discount }}</td>
+                                <td>{{ p.get_status_display }}</td>
+                                {% if operador %}
+                                    <td>
+                                        <a href="/pagamentos/{{ p.id }}/liberar">
+                                            <button class="btn btn-success">Liberar</button>
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <a href="/pagamentos/{{ p.id }}/negar">
+                                            <button class="btn btn-danger">Negar</button>
+                                        </a>
+                                    </td>
+                                {% endif %}
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+
+                {% endif %}
+
+                {% if payments_approved %}
+
+                    <h2>Aprovados</h2>
+
+                    <table class="table table-hover">
+                        <thead>
+                        <tr>
+                            <th scope="col">ID</th>
+                            <th scope="col">Fornecedor</th>
+                            <th scope="col">Data de Emissão</th>
+                            <th scope="col">Data de Vencimento</th>
+                            <th scope="col">Valor Original</th>
+                            <th scope="col">Data Antecipação</th>
+                            <th scope="col">Desconto</th>
+                            <th scope="col">Valor com Desconto</th>
+                            <th scope="col">Situação</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for p in payments_approved %}
+                            <tr>
+                                <th scope="row">{{ p.id }}</th>
+                                <td>{{ p.provider.corporate_name }}</td>
+                                <td>{{ p.date_issuance }}</td>
+                                <td>{{ p.date_due }}</td>
+                                <td>{{ p.value_original }}</td>
+                                <td>{{ p.date_anticipation }}</td>
+                                <td>{{ p.discount }}</td>
+                                <td>{{ p.value_with_discount }}</td>
+                                <td>{{ p.get_status_display }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+
+                {% endif %}
+
+                {% if payments_denied %}
+
+                    <h2>Negados</h2>
+
+                    <table class="table table-hover">
+                        <thead>
+                        <tr>
+                            <th scope="col">ID</th>
+                            <th scope="col">Fornecedor</th>
+                            <th scope="col">Data de Emissão</th>
+                            <th scope="col">Data de Vencimento</th>
+                            <th scope="col">Valor Original</th>
+                            <th scope="col">Data Antecipação</th>
+                            <th scope="col">Desconto</th>
+                            <th scope="col">Valor com Desconto</th>
+                            <th scope="col">Situação</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for p in payments_denied %}
+                            <tr>
+                                <th scope="row">{{ p.id }}</th>
+                                <td>{{ p.provider.corporate_name }}</td>
+                                <td>{{ p.date_issuance }}</td>
+                                <td>{{ p.date_due }}</td>
+                                <td>{{ p.value_original }}</td>
+                                <td>{{ p.date_anticipation }}</td>
+                                <td>{{ p.discount }}</td>
+                                <td>{{ p.value_with_discount }}</td>
+                                <td>{{ p.get_status_display }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+
+                {% endif %}
+
             </div>
         </div>
     </div>

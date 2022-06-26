@@ -113,7 +113,7 @@ class Payment(models.Model):
         ('DISPO', 'Disponível'),
         ('INDIS', 'Indisponível'),
         ('AGUAR', 'Aguardando Confirmação'),
-        ('ACEIT', 'Aceito'),
+        ('APROV', 'Aprovado'),
         ('NEGAD', 'Negado'),
     )
 

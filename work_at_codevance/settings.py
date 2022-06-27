@@ -39,7 +39,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'work_at_codevance.base'
+    'work_at_codevance.base',
+    'rest_framework_simplejwt',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
@@ -141,3 +143,11 @@ AUTH_USER_MODEL = 'base.User'
 # LOGIN
 
 LOGIN_URL = '/login'
+
+# REST FRAMEWORK
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    )
+}

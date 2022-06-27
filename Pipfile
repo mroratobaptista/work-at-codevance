@@ -10,6 +10,7 @@ python-decouple = "*"
 dj-database-url = "*"
 psycopg2-binary = "*"
 whitenoise = "*"
+djangorestframework-simplejwt = "*"
 
 [dev-packages]
 pytest-django = "*"

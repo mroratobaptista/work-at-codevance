@@ -217,6 +217,7 @@ class UserAdmin(admin.ModelAdmin):
 
 class PaymentAdmin(admin.ModelAdmin):
     list_display = (
+        'id',
         'provider',
         'date_issuance',
         'date_due',

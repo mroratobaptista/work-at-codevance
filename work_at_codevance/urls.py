@@ -16,7 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from work_at_codevance.base.views import home, login_view, logout_view, payments
+from work_at_codevance.base.views import home, login_view, logout_view, payments, detail_payment
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -27,4 +27,6 @@ urlpatterns = [
     path('logout/', logout_view),
 
     path('pagamentos/', payments),
+    path('pagamentos/<int:payment_id>/', detail_payment),
+
 ]

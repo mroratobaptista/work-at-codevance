@@ -40,6 +40,6 @@ urlpatterns = [
 
     path('api/pagamentos/', return_user_payments),
     path('api/pagamentos/<str:status>/', return_user_payments),
-    path('api/solicitar-adiantamento/<int:payment_id>/', request_payment_anticipation),
+    path('api/solicitar-adiantamento/<int:payment_id>/<str:date_anticipation_str>/', request_payment_anticipation),
 ]
 

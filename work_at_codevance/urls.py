@@ -15,6 +15,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView,
+    TokenRefreshView,
+)
 
 from work_at_codevance.base.views import home, login_view, logout_view, payments, detail_payment, \
     approve_deny_anticipation
@@ -31,4 +35,7 @@ urlpatterns = [
     path('pagamentos/<int:payment_id>/', detail_payment),
     path('pagamentos/<int:payment_id>/<str:do>/', approve_deny_anticipation),
 
+    # API
+    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 ]

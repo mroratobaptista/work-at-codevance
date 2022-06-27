@@ -26,7 +26,7 @@ cd work-at-codevance
 cp contrib/.env-sample .
 ```
 
-### Copiar arquivo para .env
+### Renomear arquivo para .env
 
 ```shell
 mv .env-sample .env
@@ -84,7 +84,7 @@ pipenv shell
 celery -A work_at_codevance worker
 ```
 
-### Configuração Inicial
+## Configuração Inicial
 
 1. Acesse [Django Admin](http:127.0.0.1:8000/admin).
 2. Crie 2 grupos.
@@ -97,7 +97,7 @@ celery -A work_at_codevance worker
 
 ## Documentação API
 
-A API tem 2 endpoints, além dos tradicionais **/api/token/** e **/api/token/refresh/**.
+A API tem 2 endpoints, além dos tradicionais **/api/token/** e **/api/token/refresh/** do Django Rest Framework.
 
 - /api/pagamentos/
 - /api/solicitar-adiantamento/
@@ -145,77 +145,76 @@ curl \
 
 Resposta
 
-```shell
+```json
 {
-{
-    "count": 5,
-    "payments": [
-        {
-            "id": 1,
-            "provider__cnpj": 1,
-            "date_issuance": "2019-10-01",
-            "date_due": "2019-10-01",
-            "date_anticipation": "2019-09-15",
-            "value_original": 1000.0,
-            "discount": 16.0,
-            "value_with_discount": 984.0,
-            "status": "AGUAR",
-            "created_at": "2022-06-26T22:14:36.749954Z",
-            "updated_at": "2022-06-27T18:52:20.563004Z"
-        },
-        {
-            "id": 2,
-            "provider__cnpj": 1,
-            "date_issuance": "2022-06-26",
-            "date_due": "2022-07-25",
-            "date_anticipation": "2022-07-15",
-            "value_original": 156.0,
-            "discount": 1.56,
-            "value_with_discount": 154.44,
-            "status": "APROV",
-            "created_at": "2022-06-26T22:14:48.121456Z",
-            "updated_at": "2022-06-27T18:52:37.286695Z"
-        },
-        {
-            "id": 3,
-            "provider__cnpj": 1,
-            "date_issuance": "2022-06-26",
-            "date_due": "2022-07-25",
-            "date_anticipation": "2022-07-24",
-            "value_original": 4650.0,
-            "discount": 4.65,
-            "value_with_discount": 4645.35,
-            "status": "NEGAD",
-            "created_at": "2022-06-26T22:14:56.239657Z",
-            "updated_at": "2022-06-27T18:52:48.313093Z"
-        },
-        {
-            "id": 4,
-            "provider__cnpj": 1,
-            "date_issuance": "2022-06-26",
-            "date_due": "2022-07-25",
-            "date_anticipation": null,
-            "value_original": 98789.0,
-            "discount": null,
-            "value_with_discount": null,
-            "status": "DISPO",
-            "created_at": "2022-06-26T22:15:06.115609Z",
-            "updated_at": "2022-06-27T18:39:11.135126Z"
-        },
-        {
-            "id": 5,
-            "provider__cnpj": 1,
-            "date_issuance": "2022-06-26",
-            "date_due": "2022-06-27",
-            "date_anticipation": null,
-            "value_original": 98.8,
-            "discount": null,
-            "value_with_discount": null,
-            "status": "INDIS",
-            "created_at": "2022-06-26T22:15:16.424598Z",
-            "updated_at": "2022-06-27T18:53:57.131479Z"
-        }
-    ]
+  "count": 5,
+  "payments": [
+    {
+      "id": 1,
+      "provider__cnpj": 1,
+      "date_issuance": "2019-10-01",
+      "date_due": "2019-10-01",
+      "date_anticipation": "2019-09-15",
+      "value_original": 1000.0,
+      "discount": 16.0,
+      "value_with_discount": 984.0,
+      "status": "AGUAR",
+      "created_at": "2022-06-26T22:14:36.749954Z",
+      "updated_at": "2022-06-27T18:52:20.563004Z"
+    },
+    {
+      "id": 2,
+      "provider__cnpj": 1,
+      "date_issuance": "2022-06-26",
+      "date_due": "2022-07-25",
+      "date_anticipation": "2022-07-15",
+      "value_original": 156.0,
+      "discount": 1.56,
+      "value_with_discount": 154.44,
+      "status": "APROV",
+      "created_at": "2022-06-26T22:14:48.121456Z",
+      "updated_at": "2022-06-27T18:52:37.286695Z"
+    },
+    {
+      "id": 3,
+      "provider__cnpj": 1,
+      "date_issuance": "2022-06-26",
+      "date_due": "2022-07-25",
+      "date_anticipation": "2022-07-24",
+      "value_original": 4650.0,
+      "discount": 4.65,
+      "value_with_discount": 4645.35,
+      "status": "NEGAD",
+      "created_at": "2022-06-26T22:14:56.239657Z",
+      "updated_at": "2022-06-27T18:52:48.313093Z"
+    },
+    {
+      "id": 4,
+      "provider__cnpj": 1,
+      "date_issuance": "2022-06-26",
+      "date_due": "2022-07-25",
+      "date_anticipation": null,
+      "value_original": 98789.0,
+      "discount": null,
+      "value_with_discount": null,
+      "status": "DISPO",
+      "created_at": "2022-06-26T22:15:06.115609Z",
+      "updated_at": "2022-06-27T18:39:11.135126Z"
+    },
+    {
+      "id": 5,
+      "provider__cnpj": 1,
+      "date_issuance": "2022-06-26",
+      "date_due": "2022-06-27",
+      "date_anticipation": null,
+      "value_original": 98.8,
+      "discount": null,
+      "value_with_discount": null,
+      "status": "INDIS",
+      "created_at": "2022-06-26T22:15:16.424598Z",
+      "updated_at": "2022-06-27T18:53:57.131479Z"
+    }
+  ]
 }
 ```
 
@@ -235,24 +234,24 @@ curl \
 
 Resposta
 
-```shell
+```json
 {
-    "count": 1,
-    "payments": [
-        {
-            "id": 4,
-            "provider__cnpj": 1,
-            "date_issuance": "2022-06-26",
-            "date_due": "2022-07-25",
-            "date_anticipation": null,
-            "value_original": 98789.0,
-            "discount": null,
-            "value_with_discount": null,
-            "status": "DISPO",
-            "created_at": "2022-06-26T22:15:06.115609Z",
-            "updated_at": "2022-06-27T18:39:11.135126Z"
-        }
-    ]
+  "count": 1,
+  "payments": [
+    {
+      "id": 4,
+      "provider__cnpj": 1,
+      "date_issuance": "2022-06-26",
+      "date_due": "2022-07-25",
+      "date_anticipation": null,
+      "value_original": 98789.0,
+      "discount": null,
+      "value_with_discount": null,
+      "status": "DISPO",
+      "created_at": "2022-06-26T22:15:06.115609Z",
+      "updated_at": "2022-06-27T18:39:11.135126Z"
+    }
+  ]
 }
 ```
 
@@ -272,24 +271,24 @@ curl \
 
 Resposta
 
-```shell
+```json
 {
-    "count": 1,
-    "payments": [
-        {
-            "id": 5,
-            "provider__cnpj": 1,
-            "date_issuance": "2022-06-26",
-            "date_due": "2022-06-27",
-            "date_anticipation": null,
-            "value_original": 98.8,
-            "discount": null,
-            "value_with_discount": null,
-            "status": "INDIS",
-            "created_at": "2022-06-26T22:15:16.424598Z",
-            "updated_at": "2022-06-27T18:53:57.131479Z"
-        }
-    ]
+  "count": 1,
+  "payments": [
+    {
+      "id": 5,
+      "provider__cnpj": 1,
+      "date_issuance": "2022-06-26",
+      "date_due": "2022-06-27",
+      "date_anticipation": null,
+      "value_original": 98.8,
+      "discount": null,
+      "value_with_discount": null,
+      "status": "INDIS",
+      "created_at": "2022-06-26T22:15:16.424598Z",
+      "updated_at": "2022-06-27T18:53:57.131479Z"
+    }
+  ]
 }
 ```
 
@@ -307,24 +306,24 @@ curl \
 
 Resposta
 
-```shell
+```json
 {
-    "count": 1,
-    "payments": [
-        {
-            "id": 1,
-            "provider__cnpj": 1,
-            "date_issuance": "2019-10-01",
-            "date_due": "2019-10-01",
-            "date_anticipation": "2019-09-15",
-            "value_original": 1000.0,
-            "discount": 16.0,
-            "value_with_discount": 984.0,
-            "status": "AGUAR",
-            "created_at": "2022-06-26T22:14:36.749954Z",
-            "updated_at": "2022-06-27T18:52:20.563004Z"
-        }
-    ]
+  "count": 1,
+  "payments": [
+    {
+      "id": 1,
+      "provider__cnpj": 1,
+      "date_issuance": "2019-10-01",
+      "date_due": "2019-10-01",
+      "date_anticipation": "2019-09-15",
+      "value_original": 1000.0,
+      "discount": 16.0,
+      "value_with_discount": 984.0,
+      "status": "AGUAR",
+      "created_at": "2022-06-26T22:14:36.749954Z",
+      "updated_at": "2022-06-27T18:52:20.563004Z"
+    }
+  ]
 }
 ```
 
@@ -342,24 +341,24 @@ curl \
 
 Resposta
 
-```shell
+```json
 {
-    "count": 1,
-    "payments": [
-        {
-            "id": 2,
-            "provider__cnpj": 1,
-            "date_issuance": "2022-06-26",
-            "date_due": "2022-07-25",
-            "date_anticipation": "2022-07-15",
-            "value_original": 156.0,
-            "discount": 1.56,
-            "value_with_discount": 154.44,
-            "status": "APROV",
-            "created_at": "2022-06-26T22:14:48.121456Z",
-            "updated_at": "2022-06-27T18:52:37.286695Z"
-        }
-    ]
+  "count": 1,
+  "payments": [
+    {
+      "id": 2,
+      "provider__cnpj": 1,
+      "date_issuance": "2022-06-26",
+      "date_due": "2022-07-25",
+      "date_anticipation": "2022-07-15",
+      "value_original": 156.0,
+      "discount": 1.56,
+      "value_with_discount": 154.44,
+      "status": "APROV",
+      "created_at": "2022-06-26T22:14:48.121456Z",
+      "updated_at": "2022-06-27T18:52:37.286695Z"
+    }
+  ]
 }
 ```
 
@@ -377,24 +376,24 @@ curl \
 
 Resposta
 
-```shell
+```json
 {
-    "count": 1,
-    "payments": [
-        {
-            "id": 3,
-            "provider__cnpj": 1,
-            "date_issuance": "2022-06-26",
-            "date_due": "2022-07-25",
-            "date_anticipation": "2022-07-24",
-            "value_original": 4650.0,
-            "discount": 4.65,
-            "value_with_discount": 4645.35,
-            "status": "NEGAD",
-            "created_at": "2022-06-26T22:14:56.239657Z",
-            "updated_at": "2022-06-27T18:52:48.313093Z"
-        }
-    ]
+  "count": 1,
+  "payments": [
+    {
+      "id": 3,
+      "provider__cnpj": 1,
+      "date_issuance": "2022-06-26",
+      "date_due": "2022-07-25",
+      "date_anticipation": "2022-07-24",
+      "value_original": 4650.0,
+      "discount": 4.65,
+      "value_with_discount": 4645.35,
+      "status": "NEGAD",
+      "created_at": "2022-06-26T22:14:56.239657Z",
+      "updated_at": "2022-06-27T18:52:48.313093Z"
+    }
+  ]
 }
 ```
 
@@ -418,20 +417,20 @@ curl \
 
 Resposta
 
-```shell
+```json
 {
-    "payment": {
-        "id": 1,
-        "provider_cnpj": 1,
-        "date_issuance": "2019-10-01",
-        "date_due": "2019-10-01",
-        "date_anticipation": "2019-09-15",
-        "value_original": 1000.0,
-        "discount": 16.0,
-        "value_with_discount": 984.0,
-        "status": "AGUAR",
-        "created_at": "2022-06-26T22:14:36.749954Z",
-        "updated_at": "2022-06-27T19:02:52.097965Z"
-    }
+  "payment": {
+    "id": 1,
+    "provider_cnpj": 1,
+    "date_issuance": "2019-10-01",
+    "date_due": "2019-10-01",
+    "date_anticipation": "2019-09-15",
+    "value_original": 1000.0,
+    "discount": 16.0,
+    "value_with_discount": 984.0,
+    "status": "AGUAR",
+    "created_at": "2022-06-26T22:14:36.749954Z",
+    "updated_at": "2022-06-27T19:02:52.097965Z"
+  }
 }
 ```

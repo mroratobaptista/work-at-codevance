@@ -119,7 +119,8 @@ def detail_payment(request, payment_id):
             logger = logging.getLogger('db')
             msg = f'ID Pagamento: {payment.id} foi enviado para análise pelo usuário {request.user}.'
             logger.info(msg)
-            send_mail.delay(f'Houve alteração no status do pagamento {payment_id} para {payment.status}', f'{request.user}', 'template_email.txt', {'msg': msg})
+            send_mail.delay(f'Houve alteração no status do pagamento {payment_id} para {payment.status}',
+                            f'{request.user}', 'template_email.txt', {'msg': msg})
 
             return redirect(payments)
 
@@ -160,7 +161,8 @@ def return_user_payments(request, status=None):
         {
             'count': len(payments),
             'payments': payments.values(
-                'provider',
+                'id',
+                'provider__cnpj',
                 'date_issuance',
                 'date_due',
                 'date_anticipation',
@@ -177,13 +179,24 @@ def return_user_payments(request, status=None):
 @api_view(['GET', 'POST'])
 @renderer_classes([JSONRenderer])
 @permission_classes([IsAuthenticated])
-def request_payment_anticipation(request, payment_id):
+def request_payment_anticipation(request, payment_id, date_anticipation_str):
     status = 'AGUAR'
 
     if check_if_payment_belongs_to_the_user(request.user, payment_id):
         payment = Payment.objects.get(id=payment_id)
         payment.status = status
+
+        date_anticipation = datetime.strptime(date_anticipation_str, '%Y-%m-%d').date()
+        payment.date_anticipation = date_anticipation
+
+        value_with_discount = calculate_discount(payment.date_due, date_anticipation, payment.value_original)
+        payment.value_with_discount = round(value_with_discount, 2)
+
+        discount = payment.value_original - value_with_discount
+        payment.discount = round(discount, 2)
+
         payment.save()
+
         logger = logging.getLogger('db')
         msg = f'ID Pagamento: {payment.id} foi enviado para análise pelo usuário {request.user}.'
         send_mail.delay(f'Houve alteração no status do pagamento {payment_id} para {payment.status}', f'{request.user}',
@@ -196,7 +209,7 @@ def request_payment_anticipation(request, payment_id):
         {
             'payment': {
                 'id': payment.id,
-                'provider': payment.provider.corporate_name,
+                'provider_cnpj': payment.provider.cnpj,
                 'date_issuance': payment.date_issuance,
                 'date_due': payment.date_due,
                 'date_anticipation': payment.date_anticipation,

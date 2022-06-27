@@ -11,6 +11,7 @@ dj-database-url = "*"
 psycopg2-binary = "*"
 whitenoise = "*"
 djangorestframework-simplejwt = "*"
+django-db-logger = "*"
 
 [dev-packages]
 pytest-django = "*"

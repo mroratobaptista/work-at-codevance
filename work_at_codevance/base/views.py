@@ -1,3 +1,4 @@
+import logging
 from datetime import datetime
 
 from django.contrib.auth import logout, login
@@ -114,6 +115,9 @@ def detail_payment(request, payment_id):
 
             payment.save()
 
+            logger = logging.getLogger('db')
+            logger.info(f'ID Pagamento: {payment.id} foi enviado para análise pelo usuário {request.user}.')
+
             return redirect(payments)
 
         elif date_anticipation_str:
@@ -130,6 +134,8 @@ def approve_deny_anticipation(request, payment_id, do):
     payment = Payment.objects.get(id=payment_id)
     payment.status = do
     payment.save()
+    logger = logging.getLogger('db')
+    logger.info(f'ID Pagamento: {payment.id} foi enviado {do} pelo usuário {request.user}.')
     return redirect(payments)
 
 
@@ -172,6 +178,8 @@ def request_payment_anticipation(request, payment_id):
         payment = Payment.objects.get(id=payment_id)
         payment.status = status
         payment.save()
+        logger = logging.getLogger('db')
+        logger.info(f'ID Pagamento: {payment.id} foi enviado para análise pelo usuário {request.user}.')
     else:
         return Response({'msg': 'Pagamento não encontrado'})
 

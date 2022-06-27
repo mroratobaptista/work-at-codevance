@@ -102,11 +102,11 @@ def detail_payment(request, payment_id):
             payment.status = 'AGUAR'
             payment.date_anticipation = date_anticipation_str
 
-            value_with_discount = float(value_with_discount_str.replace(',', '.'))
-            payment.value_with_discount = float(value_with_discount_str.replace(',', '.'))
+            value_with_discount = round(float(value_with_discount_str.replace(',', '.')), 2)
+            payment.value_with_discount = round(float(value_with_discount_str.replace(',', '.')), 2)
 
             discount = payment.value_original - value_with_discount
-            payment.discount = discount
+            payment.discount = round(discount, 2)
 
             payment.save()
 
@@ -115,7 +115,15 @@ def detail_payment(request, payment_id):
         elif date_anticipation_str:
             date_anticipation = datetime.strptime(date_anticipation_str, '%Y-%m-%d').date()
             value_with_discount = calculate_discount(payment.date_due, date_anticipation, payment.value_original)
-            context['value_with_discount'] = value_with_discount
+            context['value_with_discount'] = round(value_with_discount, 2)
             context['date_anticipation'] = date_anticipation_str
 
     return render(request, 'detail_payment.html', context=context)
+
+
+@login_required
+def approve_deny_anticipation(request, payment_id, do):
+    payment = Payment.objects.get(id=payment_id)
+    payment.status = do
+    payment.save()
+    return redirect(payments)

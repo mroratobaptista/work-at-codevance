@@ -11,6 +11,7 @@ from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
 
 from work_at_codevance.base.models import Payment
+from work_at_codevance.base.tasks import send_mail
 from work_at_codevance.base.utils import is_member, calculate_discount, check_if_payment_belongs_to_the_user
 
 
@@ -116,7 +117,9 @@ def detail_payment(request, payment_id):
             payment.save()
 
             logger = logging.getLogger('db')
-            logger.info(f'ID Pagamento: {payment.id} foi enviado para análise pelo usuário {request.user}.')
+            msg = f'ID Pagamento: {payment.id} foi enviado para análise pelo usuário {request.user}.'
+            logger.info(msg)
+            send_mail.delay(f'Houve alteração no status do pagamento {payment_id} para {payment.status}', f'{request.user}', 'template_email.txt', {'msg': msg})
 
             return redirect(payments)
 
@@ -135,7 +138,10 @@ def approve_deny_anticipation(request, payment_id, do):
     payment.status = do
     payment.save()
     logger = logging.getLogger('db')
-    logger.info(f'ID Pagamento: {payment.id} foi enviado {do} pelo usuário {request.user}.')
+    msg = f'ID Pagamento: {payment.id} foi enviado {do} pelo usuário {request.user}.'
+    logger.info(msg)
+    send_mail.delay(f'Houve alteração no status do pagamento {payment_id} para {payment.status}', f'{request.user}',
+                    'template_email.txt', {'msg': msg})
     return redirect(payments)
 
 
@@ -179,7 +185,10 @@ def request_payment_anticipation(request, payment_id):
         payment.status = status
         payment.save()
         logger = logging.getLogger('db')
-        logger.info(f'ID Pagamento: {payment.id} foi enviado para análise pelo usuário {request.user}.')
+        msg = f'ID Pagamento: {payment.id} foi enviado para análise pelo usuário {request.user}.'
+        send_mail.delay(f'Houve alteração no status do pagamento {payment_id} para {payment.status}', f'{request.user}',
+                        'template_email.txt', {'msg': msg})
+        logger.info(msg)
     else:
         return Response({'msg': 'Pagamento não encontrado'})
 

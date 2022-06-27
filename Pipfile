@@ -12,6 +12,8 @@ psycopg2-binary = "*"
 whitenoise = "*"
 djangorestframework-simplejwt = "*"
 django-db-logger = "*"
+celery = "*"
+redis = "*"
 
 [dev-packages]
 pytest-django = "*"

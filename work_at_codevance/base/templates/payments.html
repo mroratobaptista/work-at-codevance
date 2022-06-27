@@ -110,12 +110,12 @@
                                 <td>{{ p.get_status_display }}</td>
                                 {% if operador %}
                                     <td>
-                                        <a href="/pagamentos/{{ p.id }}/liberar">
+                                        <a href="/pagamentos/{{ p.id }}/APROV">
                                             <button class="btn btn-success">Liberar</button>
                                         </a>
                                     </td>
                                     <td>
-                                        <a href="/pagamentos/{{ p.id }}/negar">
+                                        <a href="/pagamentos/{{ p.id }}/NEGAD">
                                             <button class="btn btn-danger">Negar</button>
                                         </a>
                                     </td>

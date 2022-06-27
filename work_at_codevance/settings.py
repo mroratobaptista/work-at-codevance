@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'work_at_codevance.base',
     'rest_framework_simplejwt',
     'rest_framework',
+    'django_db_logger',
 ]
 
 MIDDLEWARE = [
@@ -150,4 +151,35 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     )
+}
+
+# LOGGING
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s'
+        },
+        'simple': {
+            'format': '%(levelname)s %(asctime)s %(message)s'
+        },
+    },
+    'handlers': {
+        'db_log': {
+            'level': 'DEBUG',
+            'class': 'django_db_logger.db_log_handler.DatabaseLogHandler'
+        },
+    },
+    'loggers': {
+        'db': {
+            'handlers': config('LOG', cast=Csv()),
+            'level': 'DEBUG'
+        },
+        'django.request': {  # logging 500 errors to database
+            'handlers': ['db_log'],
+            'level': 'ERROR',
+            'propagate': False,
+        }
+    }
 }

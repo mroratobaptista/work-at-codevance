@@ -135,4 +135,4 @@ class Payment(models.Model):
         verbose_name_plural = 'pagamentos'
 
     def __str__(self):
-        return self.provider.corporate_name
+        return f'ID: {self.id} | {self.provider.corporate_name}'

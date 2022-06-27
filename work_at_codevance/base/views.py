@@ -1,12 +1,16 @@
 from datetime import datetime
 
-from django.contrib.auth import login, logout
+from django.contrib.auth import logout, login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
 from django.shortcuts import render, redirect
+from rest_framework.decorators import api_view, renderer_classes, permission_classes
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.renderers import JSONRenderer
+from rest_framework.response import Response
 
 from work_at_codevance.base.models import Payment
-from work_at_codevance.base.utils import is_member, calculate_discount
+from work_at_codevance.base.utils import is_member, calculate_discount, check_if_payment_belongs_to_the_user
 
 
 @login_required
@@ -127,3 +131,63 @@ def approve_deny_anticipation(request, payment_id, do):
     payment.status = do
     payment.save()
     return redirect(payments)
+
+
+@api_view(['GET', 'POST'])
+@renderer_classes([JSONRenderer])
+@permission_classes([IsAuthenticated])
+def return_user_payments(request, status=None):
+    user = request.user
+    provider = user.provider_set.get()
+    payments = provider.payment_set.all()
+
+    if status:
+        payments = payments.filter(status=status)
+
+    return Response(
+        {
+            'count': len(payments),
+            'payments': payments.values(
+                'provider',
+                'date_issuance',
+                'date_due',
+                'date_anticipation',
+                'value_original',
+                'discount',
+                'value_with_discount',
+                'status',
+                'created_at',
+                'updated_at',
+            )}
+    )
+
+
+@api_view(['GET', 'POST'])
+@renderer_classes([JSONRenderer])
+@permission_classes([IsAuthenticated])
+def request_payment_anticipation(request, payment_id):
+    status = 'AGUAR'
+
+    if check_if_payment_belongs_to_the_user(request.user, payment_id):
+        payment = Payment.objects.get(id=payment_id)
+        payment.status = status
+        payment.save()
+    else:
+        return Response({'msg': 'Pagamento não encontrado'})
+
+    return Response(
+        {
+            'payment': {
+                'id': payment.id,
+                'provider': payment.provider.corporate_name,
+                'date_issuance': payment.date_issuance,
+                'date_due': payment.date_due,
+                'date_anticipation': payment.date_anticipation,
+                'value_original': payment.value_original,
+                'discount': payment.discount,
+                'value_with_discount': payment.value_with_discount,
+                'status': payment.status,
+                'created_at': payment.created_at,
+                'updated_at': payment.updated_at,
+            }}
+    )

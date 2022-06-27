@@ -21,8 +21,7 @@ from rest_framework_simplejwt.views import (
 )
 
 from work_at_codevance.base.views import home, login_view, logout_view, payments, detail_payment, \
-    approve_deny_anticipation
-
+    approve_deny_anticipation, return_user_payments, request_payment_anticipation
 urlpatterns = [
     path('admin/', admin.site.urls),
 
@@ -38,4 +37,9 @@ urlpatterns = [
     # API
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+
+    path('api/pagamentos/', return_user_payments),
+    path('api/pagamentos/<str:status>/', return_user_payments),
+    path('api/solicitar-adiantamento/<int:payment_id>/', request_payment_anticipation),
 ]
+

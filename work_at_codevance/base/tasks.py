@@ -2,7 +2,6 @@ import logging
 from datetime import datetime
 
 from celery import current_app
-from celery import shared_task
 from django.core import mail
 from django.template.loader import render_to_string
 
@@ -23,7 +22,7 @@ def check_payments_due_today():
         logger.info(msg)
 
 
-@shared_task
+@current_app.task
 def send_mail(subject, to, template_name, context):
     body = render_to_string(template_name, context)
     mail.send_mail(subject, body, DEFAULT_FROM_EMAIL, [to])

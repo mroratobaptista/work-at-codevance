@@ -1,10 +1,12 @@
+from datetime import datetime
+
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
 from django.shortcuts import render, redirect
 
 from work_at_codevance.base.models import Payment
-from work_at_codevance.base.utils import is_member
+from work_at_codevance.base.utils import is_member, calculate_discount
 
 
 @login_required
@@ -82,3 +84,38 @@ def payments(request):
     }
 
     return render(request, 'payments.html', context=context)
+
+
+@login_required
+def detail_payment(request, payment_id):
+    payment = Payment.objects.get(id=payment_id)
+
+    context = {
+        'payment': payment
+    }
+
+    if request.method == 'POST':
+        date_anticipation_str = request.POST.get('date_anticipation')
+        value_with_discount_str = request.POST.get('value_with_discount')
+
+        if value_with_discount_str:
+            payment.status = 'AGUAR'
+            payment.date_anticipation = date_anticipation_str
+
+            value_with_discount = float(value_with_discount_str.replace(',', '.'))
+            payment.value_with_discount = float(value_with_discount_str.replace(',', '.'))
+
+            discount = payment.value_original - value_with_discount
+            payment.discount = discount
+
+            payment.save()
+
+            return redirect(payments)
+
+        elif date_anticipation_str:
+            date_anticipation = datetime.strptime(date_anticipation_str, '%Y-%m-%d').date()
+            value_with_discount = calculate_discount(payment.date_due, date_anticipation, payment.value_original)
+            context['value_with_discount'] = value_with_discount
+            context['date_anticipation'] = date_anticipation_str
+
+    return render(request, 'detail_payment.html', context=context)

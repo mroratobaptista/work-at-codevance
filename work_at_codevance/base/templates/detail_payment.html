@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% block title %}Início{% endblock %}
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <h1 class="text-center">Detalhes Pagamento</h1>
+
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label class="form-label">ID</label>
+                        <input type="text" class="form-control" value="{{ payment.id }}" disabled name="payment_id">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Data de Emissão</label>
+                        <input type="text" class="form-control" value="{{ payment.date_issuance }}" disabled>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Data de Vencimento</label>
+                        <input type="text" class="form-control" value="{{ payment.date_due }}" disabled>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Valor Original</label>
+                        <input type="text" class="form-control" value="{{ payment.value_original }}" disabled>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Situação</label>
+                        <input type="text" class="form-control" value="{{ payment.get_status_display }}" disabled>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Fornecedor</label>
+                        <input type="text" class="form-control" value="{{ payment.provider.corporate_name }}"
+                               disabled>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Data de Antecipação</label>
+                        <input type="date" class="form-control" value="{{ date_anticipation }}"
+                               name="date_anticipation" required>
+                    </div>
+                    {% if value_with_discount %}
+                        <div class="mb-3">
+                            <label class="form-label">Valor com Desconto</label>
+                            <input type="text" class="form-control" value="{{ value_with_discount }}"
+                                   name="value_with_discount">
+                        </div>
+                    {% endif %}
+                    <button type="submit" class="btn btn-success">
+                        {% if value_with_discount %}
+                            Solicitar Adiantamento
+                        {% else %}
+                            Calcular Valor
+                        {% endif %}
+                    </button>
+                </form>
+
+            </div>
+        </div>
+    </div>
+{% endblock %}

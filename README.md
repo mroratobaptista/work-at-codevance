@@ -434,3 +434,19 @@ Resposta
   }
 }
 ```
+
+---
+
+## Testes
+
+Para testar com as migrações realizadas execute.
+
+```shell
+pipenv run pytest --cov
+```
+
+Caso não tenha realizados as migrações execute.
+
+```shell
+pipenv run pytest --nomigrations --cov
+```

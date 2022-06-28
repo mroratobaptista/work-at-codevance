@@ -1,6 +1,6 @@
 # Work At Codevance
 
-Este projeto tem por finalidade demonstrar todas as habilidades técnícas solicitadas no README-CODEVANCE.md
+Este projeto tem por finalidade demonstrar todas as habilidades técnicas solicitadas no README-CODEVANCE.md
 
 ## Requisitos
 
@@ -56,19 +56,19 @@ python manage.py collectstatic
 python manage.py migrate
 ```
 
-### Criar usuário Admin
+### Criar usuário admin
 
 ```shell
 python manage.py createsuperuser
 ```
 
-### Rodar Servidor
+### Rodar servidor
 
 ```shell
 python manage.py runserver
 ```
 
-### Ativar Worker (Celery)
+## Ativar worker
 
 **Abra outra aba ou terminal e execute**
 
@@ -78,7 +78,7 @@ python manage.py runserver
 pipenv shell
 ```
 
-### Ativar Worker Celery
+### Ativar worker
 
 ```shell
 celery -A work_at_codevance worker
@@ -127,11 +127,9 @@ Resposta
 }
 ```
 
----
-
 ### /pagamentos/
 
-Retona todos os pagamentos do usuário.
+Retorna todos os pagamentos do usuário.
 
 Requisição
 
@@ -220,7 +218,7 @@ Resposta
 
 ### /pagamentos/DISPO/
 
-Retona todos os pagamentos do usuário **DISPONÍVEIS** para adiantamento.
+Retorna todos os pagamentos do usuário **DISPONÍVEIS** para adiantamento.
 
 Requisição
 
@@ -257,7 +255,7 @@ Resposta
 
 ### /pagamentos/INDIS/
 
-Retona todos os pagamentos do usuário **INDISPONÍVEIS** para adiantamento.
+Retorna todos os pagamentos do usuário **INDISPONÍVEIS** para adiantamento.
 
 Requisição
 
@@ -294,7 +292,9 @@ Resposta
 
 ### /pagamentos/AGUAR/
 
-Retona todos os pagamentos do usuário **AGUARDANDO CONFIRMAÇÃO** para adiantamento.
+Retorna todos os pagamentos do usuário **AGUARDANDO CONFIRMAÇÃO** para adiantamento.
+
+Requisição
 
 ```shell
 curl \
@@ -329,7 +329,9 @@ Resposta
 
 ### /pagamentos/APROV/
 
-Retona todos os pagamentos do usuário **APROVADOS** para adiantamento.
+Retorna todos os pagamentos do usuário **APROVADOS** para adiantamento.
+
+Requisição
 
 ```shell
 curl \
@@ -364,7 +366,9 @@ Resposta
 
 ### /pagamentos/NEGAD/
 
-Retona todos os pagamentos do usuário **NEGADOS** para adiantamento.
+Retorna todos os pagamentos do usuário **NEGADOS** para adiantamento.
+
+Requisição
 
 ```shell
 curl \
@@ -396,8 +400,6 @@ Resposta
   ]
 }
 ```
-
----
 
 ### /solicitar-adiantamento/ID_PAGAMENTO/DATA_ANTECIPAÇÃO/
 
@@ -435,17 +437,15 @@ Resposta
 }
 ```
 
----
-
 ## Testes
 
-Para testar com as migrações realizadas execute.
+Para testar com as migrações realizadas execute
 
 ```shell
 pipenv run pytest --cov
 ```
 
-Caso não tenha realizados as migrações execute.
+Caso não tenha realizados as migrações execute
 
 ```shell
 pipenv run pytest --nomigrations --cov

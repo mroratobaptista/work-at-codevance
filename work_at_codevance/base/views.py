@@ -4,6 +4,7 @@ from datetime import datetime
 from django.contrib.auth import logout, login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
+from django.shortcuts import HttpResponse
 from django.shortcuts import render, redirect
 from rest_framework.decorators import api_view, renderer_classes, permission_classes
 from rest_framework.permissions import IsAuthenticated
@@ -33,7 +34,7 @@ def login_view(request):
     else:
         form = AuthenticationForm()
 
-    return render(request, 'login.html', context={'form': form, 'login': True})
+    return render(request, 'login.html', context={'form': form})
 
 
 @login_required
@@ -94,43 +95,49 @@ def payments(request):
 
 @login_required
 def detail_payment(request, payment_id):
-    payment = Payment.objects.get(id=payment_id)
+    operator = is_member(request.user, 'Operador')
+    if not operator:
+        if not check_if_payment_belongs_to_the_user(request.user, payment_id):
+            return HttpResponse('Pagamento não encontrado', status=404)
 
-    context = {
-        'payment': payment
-    }
+    else:
+        payment = Payment.objects.get(id=payment_id)
 
-    if request.method == 'POST':
-        date_anticipation_str = request.POST.get('date_anticipation')
-        value_with_discount_str = request.POST.get('value_with_discount')
+        context = {
+            'payment': payment
+        }
 
-        if value_with_discount_str:
-            payment.status = 'AGUAR'
-            payment.date_anticipation = date_anticipation_str
+        if request.method == 'POST':
+            date_anticipation_str = request.POST.get('date_anticipation')
+            value_with_discount_str = request.POST.get('value_with_discount')
 
-            value_with_discount = round(float(value_with_discount_str.replace(',', '.')), 2)
-            payment.value_with_discount = round(float(value_with_discount_str.replace(',', '.')), 2)
+            if value_with_discount_str:
+                payment.status = 'AGUAR'
+                payment.date_anticipation = date_anticipation_str
 
-            discount = payment.value_original - value_with_discount
-            payment.discount = round(discount, 2)
+                value_with_discount = round(float(value_with_discount_str.replace(',', '.')), 2)
+                payment.value_with_discount = round(float(value_with_discount_str.replace(',', '.')), 2)
 
-            payment.save()
+                discount = payment.value_original - value_with_discount
+                payment.discount = round(discount, 2)
 
-            logger = logging.getLogger('db')
-            msg = f'ID Pagamento: {payment.id} foi enviado para análise pelo usuário {request.user}.'
-            logger.info(msg)
-            send_mail.delay(f'Houve alteração no status do pagamento {payment_id} para {payment.status}',
-                            f'{request.user}', 'template_email.txt', {'msg': msg})
+                payment.save()
 
-            return redirect(payments)
+                logger = logging.getLogger('db')
+                msg = f'ID Pagamento: {payment.id} foi enviado para análise pelo usuário {request.user}.'
+                logger.info(msg)
+                send_mail.delay(f'Houve alteração no status do pagamento {payment_id} para {payment.status}',
+                                f'{request.user}', 'template_email.txt', {'msg': msg})
 
-        elif date_anticipation_str:
-            date_anticipation = datetime.strptime(date_anticipation_str, '%Y-%m-%d').date()
-            value_with_discount = calculate_discount(payment.date_due, date_anticipation, payment.value_original)
-            context['value_with_discount'] = round(value_with_discount, 2)
-            context['date_anticipation'] = date_anticipation_str
+                return redirect(payments)
 
-    return render(request, 'detail_payment.html', context=context)
+            elif date_anticipation_str:
+                date_anticipation = datetime.strptime(date_anticipation_str, '%Y-%m-%d').date()
+                value_with_discount = calculate_discount(payment.date_due, date_anticipation, payment.value_original)
+                context['value_with_discount'] = round(value_with_discount, 2)
+                context['date_anticipation'] = date_anticipation_str
+
+        return render(request, 'detail_payment.html', context=context)
 
 
 @login_required

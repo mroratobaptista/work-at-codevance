@@ -17,6 +17,8 @@ redis = "*"
 
 [dev-packages]
 pytest-django = "*"
+model-mommy = "*"
+pytest-cov = "*"
 
 [requires]
 python_version = "3.9"

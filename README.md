@@ -68,20 +68,22 @@ python manage.py createsuperuser
 python manage.py runserver
 ```
 
-## Ativar worker
+## Ativar Beat e Worker do Celery
+
+### Ativar Beat
 
 **Abra outra aba ou terminal e execute**
 
-### Ativar shell do projeto
-
 ```shell
-pipenv shell
+pipenv run celery -A work_at_codevance beat
 ```
 
 ### Ativar worker
 
+**Abra outra aba ou terminal e execute**
+
 ```shell
-celery -A work_at_codevance worker
+pipenv run celery -A work_at_codevance worker
 ```
 
 ## Configuração Inicial
